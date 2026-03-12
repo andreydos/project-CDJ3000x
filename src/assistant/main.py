@@ -30,8 +30,13 @@ def main():
     finally:
         save_data(book)
         save_notebook_data(notebook)
+        print("Data saved.")
+        
 
 
 if __name__ == "__main__":
     main()
+
+
+
     
