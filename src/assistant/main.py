@@ -2,14 +2,14 @@
 
 from .commands import COMMANDS, NOTE_COMMANDS
 from .models import NoteBook
-from .storage import load_data, save_data
+from .storage import load_data, save_data, load_notebook_data, save_notebook_data
 from .utils import parse_input
 
 
 def main():
     """Run the assistant command loop."""
     book = load_data()
-    notebook = NoteBook()
+    notebook = load_notebook_data()
     print("Welcome to the assistant bot!")
 
     try:
@@ -29,8 +29,9 @@ def main():
                 print("Invalid command.")
     finally:
         save_data(book)
-        save_data(notebook)
-        
+        save_notebook_data(notebook)
+
 
 if __name__ == "__main__":
     main()
+    
