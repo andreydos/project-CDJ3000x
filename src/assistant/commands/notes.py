@@ -14,10 +14,13 @@ def add_note(args, notebook):
 
 @input_error
 def find_note(args, notebook):
-    title = args[0]
-    note = notebook.find_note(title)
-    if note:
-        return str(note)
+    query = " ".join(args)
+    results = [
+        str(note) for note in notebook.data.values()
+        if query.lower() in note.title.lower() or query.lower() in note.content.lower()
+    ]
+    if results:
+        return "\n".join(results)
     return "Note not found."
 
 
@@ -34,9 +37,17 @@ def edit_note(args, notebook):
     return notebook.edit_note(title, content)
 
 
+@input_error
+def all_notes(args, notebook):
+    if not notebook.data:
+        return "No notes saved."
+    return "\n".join(str(note) for note in notebook.data.values())
+
+
 NOTE_COMMANDS = {
     "add-note": add_note,
     "find-note": find_note,
     "delete-note": delete_note,
     "edit-note": edit_note,
+    "all-notes": all_notes,
 }
