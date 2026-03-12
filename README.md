@@ -44,6 +44,11 @@ PYTHONPATH=src python3 -m assistant.main
 | `search query` | Search by name, phone or email |
 | `delete name` | Delete contact |
 | `all` | List all contacts |
+| `add-note title content` | Add note |
+| `find-note query` | Search notes by title or content |
+| `edit-note title new_content` | Edit note |
+| `delete-note title` | Delete note |
+| `all-notes` | List all notes |
 | `close` / `exit` | Exit |
 
 ## Validation
