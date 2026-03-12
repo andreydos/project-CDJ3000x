@@ -3,7 +3,7 @@
 import pickle
 from pathlib import Path
 
-from .models import AddressBook
+from .models import AddressBook, NoteBook
 
 
 def get_data_dir() -> Path:
@@ -18,6 +18,11 @@ def get_data_path() -> Path:
     return get_data_dir() / "addressbook.pkl"
 
 
+def get_notebook_path() -> Path:
+    """Return path to notebook pickle file."""
+    return get_data_dir() / "notebook.pkl"
+
+
 def save_data(book: AddressBook) -> None:
     """Save address book to user directory."""
     with open(get_data_path(), "wb") as f:
@@ -25,9 +30,25 @@ def save_data(book: AddressBook) -> None:
 
 
 def load_data() -> AddressBook:
-    """Load address book from user directory. Returns empty book if not found."""
+    """Load address book from user directory."""
     try:
         with open(get_data_path(), "rb") as f:
             return pickle.load(f)
     except FileNotFoundError:
         return AddressBook()
+
+
+def save_notebook_data(notebook: NoteBook) -> None:
+    """Save notebook to user directory."""
+    with open(get_notebook_path(), "wb") as f:
+        pickle.dump(notebook, f)
+
+
+def load_notebook_data() -> NoteBook:
+    """Load notebook from user directory."""
+    try:
+        with open(get_notebook_path(), "rb") as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return NoteBook()
+    
