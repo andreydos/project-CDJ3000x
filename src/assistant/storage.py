@@ -3,6 +3,8 @@
 import pickle
 from pathlib import Path
 
+from assistant.models.note import NoteBook
+
 from .models import AddressBook
 
 
@@ -31,3 +33,15 @@ def load_data() -> AddressBook:
             return pickle.load(f)
     except FileNotFoundError:
         return AddressBook()
+
+
+def save_notebook_data(notebook, filename="notebook.pkl"):
+    with open(filename, "wb") as f:
+        pickle.dump(notebook, f)
+
+def load_notebook_data(filename="notebook.pkl"):
+    try:
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return NoteBook()
