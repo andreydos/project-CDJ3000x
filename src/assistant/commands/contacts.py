@@ -202,4 +202,10 @@ COMMANDS = {
     "birthdays": birthdays,
     "search": search_contacts,
     "delete": delete_contact,
+    "help": lambda args, book: """Commands:
+    Contacts: add, add-phone, add-email, add-address, add-birthday
+            change, phone, all, show-birthday, birthdays, search, delete
+    Notes:    add-note, find-note, edit-note, delete-note, all-notes
+            add-tag, find-by-tag
+    Other:    hello, help, exit/close""",
 }
