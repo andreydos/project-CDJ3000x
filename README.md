@@ -5,26 +5,40 @@ CLI application for managing contacts and address book.
 ## Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/andreydos/project-CDJ3000x.git
 cd project-CDJ3000x
+```
 
-# Install in development mode (can be run from anywhere)
+### Global install (run from anywhere)
+
+**Option A — pipx** (recommended):
+```bash
+pipx install -e .
+pipx ensurepath
+```
+Then restart the terminal or run `source ~/.bashrc` (or `source ~/.zshrc`). This adds `~/.local/bin` to PATH so `assistant` works from any folder.
+
+Requires [pipx](https://github.com/pypa/pipx). If not installed: `sudo apt install pipx` (Linux) or `pip install pipx` (Windows).
+
+**Option B — venv:**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e .
+```
+Then run `assistant` only when venv is activated, or use `.venv/bin/assistant` from project root.
+
+### Run without install
+
+From project root:
+```bash
+PYTHONPATH=src python3 -m assistant.main
 ```
 
 ## Running
 
-After installation:
-
 ```bash
 assistant
-```
-
-Or without installation (from project root):
-
-```bash
-PYTHONPATH=src python3 -m assistant.main
 ```
 
 ## Commands
