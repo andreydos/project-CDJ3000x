@@ -63,6 +63,8 @@ assistant
 | `edit-note title new_content` | Edit note |
 | `delete-note title` | Delete note |
 | `all-notes` | List all notes |
+| `add-tag title tag` | Add tag to note |
+| `find-by-tag tag` | Search notes by tag |
 | `close` / `exit` | Exit |
 
 ## Validation
@@ -75,8 +77,10 @@ assistant
 
 Data is stored in the user directory:
 
-- Linux/macOS: `~/.local/share/cli-assistant/addressbook.pkl`
-- Windows: `%USERPROFILE%\.local\share\cli-assistant\addressbook.pkl`
+- Linux/macOS: `~/.local/share/cli-assistant/`
+- Windows: `%USERPROFILE%\.local\share\cli-assistant\`
+
+Files: `addressbook.pkl` (contacts), `notebook.pkl` (notes).
 
 Data is saved automatically on exit.
 

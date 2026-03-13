@@ -4,17 +4,23 @@ from collections import UserDict
 
 
 class Note:
+    """Note with title, content and optional tags."""
+
     def __init__(self, title, content, tags=None):
         self.title = title
         self.content = content
         self.tags = tags if tags else []
 
     def add_tag(self, tag):
-        if tag not in self.tags:
-            self.tags.append(tag)
+        """Add tag if not already present."""
+        tags = getattr(self, "tags", None) or []
+        if tag not in tags:
+            tags.append(tag)
+            self.tags = tags
 
     def __str__(self):
-        tags_str = f", Tags: {', '.join(self.tags)}" if self.tags else ""
+        tags = getattr(self, "tags", None) or []
+        tags_str = f", Tags: {', '.join(tags)}" if tags else ""
         return f"Title: {self.title}, Content: {self.content}{tags_str}"
 
 
@@ -39,5 +45,10 @@ class NoteBook(UserDict):
         return "Note not found."
 
     def find_by_tag(self, tag):
-        return [note for note in self.data.values() if tag in note.tags]
+        """Find notes containing the given tag."""
+        return [
+            note
+            for note in self.data.values()
+            if tag in (getattr(note, "tags", None) or [])
+        ]
     
