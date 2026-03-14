@@ -84,6 +84,13 @@ Files: `addressbook.pkl` (contacts), `notebook.pkl` (notes).
 
 Data is saved automatically on exit.
 
+## Tests
+
+```bash
+pip install -e ".[dev]"
+pytest tests/ -v
+```
+
 ## Usage example
 
 ```

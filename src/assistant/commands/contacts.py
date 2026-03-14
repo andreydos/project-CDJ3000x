@@ -2,8 +2,27 @@
 
 from ..models import AddressBook, Record
 from ..utils import input_error
+from .registry import command
 
 
+@command("hello")
+def hello_command(args, book: AddressBook):
+    """Greeting: hello"""
+    return "How can I help you?"
+
+
+@command("help")
+def help_command(args, book: AddressBook):
+    """Show available commands."""
+    return """Commands:
+    Contacts: add, add-phone, add-email, add-address, add-birthday
+            change, phone, all, show-birthday, birthdays, search, delete
+    Notes:    add-note, find-note, edit-note, delete-note, all-notes
+            add-tag, find-by-tag
+    Other:    hello, help, exit/close"""
+
+
+@command("add")
 @input_error
 def add_contact(args, book: AddressBook):
     """Add contact: add name [phone]"""
@@ -22,6 +41,7 @@ def add_contact(args, book: AddressBook):
     return message
 
 
+@command("add-phone")
 @input_error
 def add_phone(args, book: AddressBook):
     """Add phone to existing contact: add-phone name phone"""
@@ -35,6 +55,7 @@ def add_phone(args, book: AddressBook):
     return "Phone added."
 
 
+@command("add-email")
 @input_error
 def add_email(args, book: AddressBook):
     """Add or replace email: add-email name email"""
@@ -48,6 +69,7 @@ def add_email(args, book: AddressBook):
     return "Email added."
 
 
+@command("add-address")
 @input_error
 def add_address(args, book: AddressBook):
     """Add or replace address: add-address name address..."""
@@ -62,6 +84,7 @@ def add_address(args, book: AddressBook):
     return "Address added."
 
 
+@command("add-birthday")
 @input_error
 def add_birthday(args, book: AddressBook):
     """Add birthday: add-birthday name DD.MM.YYYY"""
@@ -75,6 +98,7 @@ def add_birthday(args, book: AddressBook):
     return "Birthday added."
 
 
+@command("change")
 @input_error
 def change_contact(args, book: AddressBook):
     """Change phone: change name old_phone new_phone"""
@@ -88,6 +112,7 @@ def change_contact(args, book: AddressBook):
     return "Contact updated."
 
 
+@command("phone")
 @input_error
 def show_phone(args, book: AddressBook):
     """Show phones for contact: phone name"""
@@ -102,6 +127,7 @@ def show_phone(args, book: AddressBook):
     return "; ".join(p.value for p in record.phones)
 
 
+@command("all")
 @input_error
 def show_all(args, book: AddressBook):
     """List all contacts: all"""
@@ -125,6 +151,7 @@ def show_all(args, book: AddressBook):
     return "\n".join(lines)
 
 
+@command("show-birthday")
 @input_error
 def show_birthday(args, book: AddressBook):
     """Show birthday for contact: show-birthday name"""
@@ -139,6 +166,7 @@ def show_birthday(args, book: AddressBook):
     return str(record.birthday)
 
 
+@command("birthdays")
 @input_error
 def birthdays(args, book: AddressBook):
     """Show upcoming birthdays: birthdays [N] (default 7 days)"""
@@ -159,6 +187,7 @@ def birthdays(args, book: AddressBook):
     return "\n".join(lines)
 
 
+@command("search")
 @input_error
 def search_contacts(args, book: AddressBook):
     """Search contacts: search query"""
@@ -171,6 +200,7 @@ def search_contacts(args, book: AddressBook):
     return "\n".join(str(r) for r in results)
 
 
+@command("delete")
 @input_error
 def delete_contact(args, book: AddressBook):
     """Delete contact: delete name"""
@@ -181,31 +211,3 @@ def delete_contact(args, book: AddressBook):
         raise KeyError()
     book.delete(name)
     return "Contact deleted."
-
-
-def hello_command(args, book: AddressBook):
-    """Greeting: hello"""
-    return "How can I help you?"
-
-
-COMMANDS = {
-    "hello": hello_command,
-    "add": add_contact,
-    "add-phone": add_phone,
-    "add-email": add_email,
-    "add-address": add_address,
-    "add-birthday": add_birthday,
-    "change": change_contact,
-    "phone": show_phone,
-    "all": show_all,
-    "show-birthday": show_birthday,
-    "birthdays": birthdays,
-    "search": search_contacts,
-    "delete": delete_contact,
-    "help": lambda args, book: """Commands:
-    Contacts: add, add-phone, add-email, add-address, add-birthday
-            change, phone, all, show-birthday, birthdays, search, delete
-    Notes:    add-note, find-note, edit-note, delete-note, all-notes
-            add-tag, find-by-tag
-    Other:    hello, help, exit/close""",
-}
