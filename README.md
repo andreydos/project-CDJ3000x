@@ -55,7 +55,7 @@ assistant
 | `change name old_phone new_phone` | Change phone number |
 | `phone name` | Show contact phones |
 | `show-birthday name` | Show birthday |
-| `birthdays [N]` | Birthdays in next N days (default 7) |
+| `birthdays [N]` | Birthdays today (no args or 0) or in next N days (1–365) |
 | `search query` | Search by name, phone or email |
 | `delete name` | Delete contact |
 | `all` | List all contacts |

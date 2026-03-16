@@ -177,17 +177,21 @@ def show_birthday(args, book: AddressBook):
 @command("birthdays")
 @input_error
 def birthdays(args, book: AddressBook):
-    """Show upcoming birthdays: birthdays [N] (default 7 days)"""
-    days = 7
+    """Show upcoming birthdays: birthdays [N] (default today, max 365 days)"""
+    days = 0  # no args = today only
     if args:
         try:
             days = int(args[0])
-            if days < 1:
-                days = 7
         except ValueError:
-            pass
+            raise InvalidArgumentsError("Give me a number of days (0–365).")
+        if days < 0:
+            raise InvalidArgumentsError("Days cannot be negative.")
+        if days > 365:
+            raise InvalidArgumentsError("Cannot look ahead more than 365 days.")
     upcoming = book.get_upcoming_birthdays(days)
     if not upcoming:
+        if days == 0:
+            return "No birthdays today."
         return f"No birthdays in the next {days} days."
     lines = []
     for item in upcoming:

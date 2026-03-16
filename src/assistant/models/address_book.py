@@ -38,8 +38,8 @@ class AddressBook(UserDict):
                     results.append(record)
         return results
 
-    def get_upcoming_birthdays(self, days=7):
-        """Get contacts with birthdays in the next N days (default 7)."""
+    def get_upcoming_birthdays(self, days=0):
+        """Get contacts with birthdays today (days=0) or in the next N days (1–365)."""
         today = datetime.today().date()
         result = []
 
@@ -66,7 +66,12 @@ class AddressBook(UserDict):
 
             days_until = (birthday_this_year - today).days
 
-            if 0 <= days_until < days:
+            if days == 0:
+                include = days_until == 0
+            else:
+                include = 0 <= days_until < days
+
+            if include:
                 congratulation_date = birthday_this_year
                 weekday = congratulation_date.weekday()
 

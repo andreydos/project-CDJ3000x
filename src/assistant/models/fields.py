@@ -65,12 +65,19 @@ class Address(Field):
 class Birthday(Field):
     """Birthday field with DD.MM.YYYY format validation."""
 
+    MIN_DATE = datetime(1900, 1, 1).date()
+
     def __init__(self, value):
         try:
             date_obj = datetime.strptime(str(value).strip(), "%d.%m.%Y").date()
-            super().__init__(date_obj)
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
+        today = datetime.now().date()
+        if date_obj < self.MIN_DATE:
+            raise ValueError("Birthday cannot be before 1900.")
+        if date_obj > today:
+            raise ValueError("Birthday cannot be in the future.")
+        super().__init__(date_obj)
 
     def __str__(self):
         return self.value.strftime("%d.%m.%Y")
