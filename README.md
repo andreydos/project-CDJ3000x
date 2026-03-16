@@ -46,6 +46,7 @@ assistant
 | Command | Description |
 |---------|-------------|
 | `hello` | Greeting |
+| `help` | Show short commands overview |
 | `add name [phone]` | Add contact (phone optional) |
 | `add-phone name phone` | Add phone to existing contact |
 | `add-email name email` | Add or change email |
@@ -58,14 +59,27 @@ assistant
 | `search query` | Search by name, phone or email |
 | `delete name` | Delete contact |
 | `all` | List all contacts |
-| `add-note title content` | Add note |
+| `add-note title content` | Add note (first word is title, rest is content) |
+| `add-note "Buy milk" remember to buy it` | Add note with multi-word title |
+| `new-note` | Interactive note: asks for title and optional content |
 | `find-note query` | Search notes by title or content |
 | `edit-note title new_content` | Edit note |
 | `delete-note title` | Delete note |
 | `all-notes` | List all notes |
 | `add-tag title tag` | Add tag to note |
+| `add-tag "Buy milk" important` | Add tag to for multi-word titled note |
 | `find-by-tag tag` | Search notes by tag |
 | `close` / `exit` | Exit |
+
+### Quoted arguments
+
+The assistant uses shell-like parsing (`shlex`), so you can use quotes for multi-word titles:
+
+```text
+add-note "Buy milk" remember to buy it
+delete-note "Buy milk"
+add-tag "Buy milk" important
+```
 
 ## Validation
 

@@ -17,6 +17,19 @@ def add_note(args, notebook):
     return "Note added."
 
 
+@note_command("new-note")
+@input_error
+def new_note(args, notebook):
+    """Interactively add a note: new-note (prompts for title and optional content)."""
+    title = input("Enter note title: ").strip()
+    if not title:
+        raise InvalidArgumentsError("Title cannot be empty.")
+    content = input("Enter note content (optional): ").strip()
+    # Content is optional: allow empty string
+    notebook.add_note(Note(title, content))
+    return "Note added."
+
+
 @note_command("find-note")
 @input_error
 def find_note(args, notebook):

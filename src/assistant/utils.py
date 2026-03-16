@@ -1,5 +1,7 @@
 """Utility functions for CLI parsing and error handling."""
 
+import shlex
+
 
 class CommandError(Exception):
     """Base class for command-related errors."""
@@ -43,7 +45,11 @@ def input_error(func):
 
 def parse_input(user_input: str) -> tuple[str, list[str]]:
     """Parse user input into command and arguments."""
-    parts = user_input.strip().split()
+    try:
+        parts = shlex.split(user_input.strip())
+    except ValueError:
+        # Unbalanced quotes or similar parsing issue
+        raise InvalidArgumentsError("Invalid input syntax.")
     if not parts:
         return "", []
     cmd = parts[0].lower()
