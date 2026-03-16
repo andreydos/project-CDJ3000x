@@ -1,20 +1,42 @@
 """Utility functions for CLI parsing and error handling."""
 
 
+class CommandError(Exception):
+    """Base class for command-related errors."""
+
+
+class InvalidArgumentsError(CommandError):
+    """Raised when a command receives invalid or missing arguments."""
+
+
+class ContactNotFoundError(CommandError):
+    """Raised when a contact is not found."""
+
+
+class NoteNotFoundError(CommandError):
+    """Raised when a note is not found."""
+
+
 def input_error(func):
     """Decorator to catch and display user-friendly error messages."""
 
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
+        except InvalidArgumentsError as e:
+            return str(e)
+        except ContactNotFoundError:
+            return "Contact not found."
+        except NoteNotFoundError as e:
+            # If a custom message is provided, use it; otherwise a generic one
+            return str(e) if str(e) else "Note not found."
         except ValueError as e:
+            # Used for field validation (phone, email, birthday, etc.)
             return str(e) if str(e) else "Give me name and phone please."
         except KeyError:
             return "Contact not found."
         except IndexError:
             return "Enter the argument for the command."
-        except Exception as e:
-            return f"Something went wrong: {e}"
 
     return inner
 

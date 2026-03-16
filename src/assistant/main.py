@@ -4,6 +4,7 @@ from .commands import COMMANDS, NOTE_COMMANDS
 from .models import NoteBook
 from .storage import load_data, save_data, load_notebook_data, save_notebook_data
 from .utils import parse_input
+import traceback
 
 
 def main():
@@ -14,19 +15,23 @@ def main():
 
     try:
         while True:
-            user_input = input("Enter a command: ")
-            command, args = parse_input(user_input)
+            try:
+                user_input = input("Enter a command: ")
+                command, args = parse_input(user_input)
 
-            if command in ["close", "exit"]:
-                print("Good bye!")
-                break
+                if command in ["close", "exit"]:
+                    print("Good bye!")
+                    break
 
-            if command in NOTE_COMMANDS:
-                print(NOTE_COMMANDS[command](args, notebook))
-            elif command in COMMANDS:
-                print(COMMANDS[command](args, book))
-            elif command:
-                print("Invalid command.")
+                if command in NOTE_COMMANDS:
+                    print(NOTE_COMMANDS[command](args, notebook))
+                elif command in COMMANDS:
+                    print(COMMANDS[command](args, book))
+                elif command:
+                    print("Invalid command.")
+            except Exception as e:
+                print("Unexpected error, please contact the developer.")
+                traceback.print_exception(type(e), e, e.__traceback__)
     finally:
         save_data(book)
         save_notebook_data(notebook)

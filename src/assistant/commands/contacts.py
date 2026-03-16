@@ -1,7 +1,11 @@
 """Contact-related command handlers."""
 
 from ..models import AddressBook, Record
-from ..utils import input_error
+from ..utils import (
+    input_error,
+    InvalidArgumentsError,
+    ContactNotFoundError,
+)
 from .registry import command
 
 
@@ -27,7 +31,7 @@ def help_command(args, book: AddressBook):
 def add_contact(args, book: AddressBook):
     """Add contact: add name [phone]"""
     if len(args) < 1:
-        raise ValueError("Give me name please.")
+        raise InvalidArgumentsError("Give me name please.")
     name = args[0]
     phone = args[1] if len(args) > 1 else None
     record = book.find(name)
@@ -46,11 +50,11 @@ def add_contact(args, book: AddressBook):
 def add_phone(args, book: AddressBook):
     """Add phone to existing contact: add-phone name phone"""
     if len(args) < 2:
-        raise ValueError("Give me name and phone please.")
+        raise InvalidArgumentsError("Give me name and phone please.")
     name, phone = args[0], args[1]
     record = book.find(name)
     if record is None:
-        raise KeyError()
+        raise ContactNotFoundError()
     record.add_phone(phone)
     return "Phone added."
 
@@ -60,11 +64,11 @@ def add_phone(args, book: AddressBook):
 def add_email(args, book: AddressBook):
     """Add or replace email: add-email name email"""
     if len(args) < 2:
-        raise ValueError("Give me name and email please.")
+        raise InvalidArgumentsError("Give me name and email please.")
     name, email = args[0], args[1]
     record = book.find(name)
     if record is None:
-        raise KeyError()
+        raise ContactNotFoundError()
     record.add_email(email)
     return "Email added."
 
@@ -74,12 +78,12 @@ def add_email(args, book: AddressBook):
 def add_address(args, book: AddressBook):
     """Add or replace address: add-address name address..."""
     if len(args) < 1:
-        raise ValueError("Give me name please.")
+        raise InvalidArgumentsError("Give me name please.")
     name = args[0]
     address = " ".join(args[1:]) if len(args) > 1 else ""
     record = book.find(name)
     if record is None:
-        raise KeyError()
+        raise ContactNotFoundError()
     record.add_address(address)
     return "Address added."
 
@@ -89,11 +93,13 @@ def add_address(args, book: AddressBook):
 def add_birthday(args, book: AddressBook):
     """Add birthday: add-birthday name DD.MM.YYYY"""
     if len(args) < 2:
-        raise ValueError("Give me name and birthday (DD.MM.YYYY) please.")
+        raise InvalidArgumentsError(
+            "Give me name and birthday (DD.MM.YYYY) please."
+        )
     name, birthday_str = args[0], args[1]
     record = book.find(name)
     if record is None:
-        raise KeyError()
+        raise ContactNotFoundError()
     record.add_birthday(birthday_str)
     return "Birthday added."
 
@@ -103,11 +109,13 @@ def add_birthday(args, book: AddressBook):
 def change_contact(args, book: AddressBook):
     """Change phone: change name old_phone new_phone"""
     if len(args) < 3:
-        raise ValueError("Give me name, old phone and new phone please.")
+        raise InvalidArgumentsError(
+            "Give me name, old phone and new phone please."
+        )
     name, old_phone, new_phone = args[0], args[1], args[2]
     record = book.find(name)
     if record is None:
-        raise KeyError()
+        raise ContactNotFoundError()
     record.edit_phone(old_phone, new_phone)
     return "Contact updated."
 
@@ -117,11 +125,11 @@ def change_contact(args, book: AddressBook):
 def show_phone(args, book: AddressBook):
     """Show phones for contact: phone name"""
     if len(args) < 1:
-        raise ValueError("Give me name please.")
+        raise InvalidArgumentsError("Give me name please.")
     name = args[0]
     record = book.find(name)
     if record is None:
-        raise KeyError()
+        raise ContactNotFoundError()
     if not record.phones:
         return "No phones for this contact."
     return "; ".join(p.value for p in record.phones)
@@ -156,11 +164,11 @@ def show_all(args, book: AddressBook):
 def show_birthday(args, book: AddressBook):
     """Show birthday for contact: show-birthday name"""
     if len(args) < 1:
-        raise ValueError("Give me name please.")
+        raise InvalidArgumentsError("Give me name please.")
     name = args[0]
     record = book.find(name)
     if record is None:
-        raise KeyError()
+        raise ContactNotFoundError()
     if record.birthday is None:
         return "No birthday set for this contact."
     return str(record.birthday)
@@ -192,7 +200,7 @@ def birthdays(args, book: AddressBook):
 def search_contacts(args, book: AddressBook):
     """Search contacts: search query"""
     if len(args) < 1:
-        raise ValueError("Give me search query please.")
+        raise InvalidArgumentsError("Give me search query please.")
     query = " ".join(args)
     results = book.search(query)
     if not results:
@@ -205,9 +213,9 @@ def search_contacts(args, book: AddressBook):
 def delete_contact(args, book: AddressBook):
     """Delete contact: delete name"""
     if len(args) < 1:
-        raise ValueError("Give me name please.")
+        raise InvalidArgumentsError("Give me name please.")
     name = args[0]
     if book.find(name) is None:
-        raise KeyError()
+        raise ContactNotFoundError()
     book.delete(name)
     return "Contact deleted."

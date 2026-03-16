@@ -1,7 +1,7 @@
 """Note-related command handlers."""
 
 from ..models import Note, NoteBook
-from ..utils import input_error
+from ..utils import input_error, InvalidArgumentsError, NoteNotFoundError
 from .registry import note_command
 
 
@@ -10,7 +10,7 @@ from .registry import note_command
 def add_note(args, notebook):
     """Add note: add-note title content"""
     if len(args) < 2:
-        raise ValueError("Give me title and content please.")
+        raise InvalidArgumentsError("Give me title and content please.")
     title, *content = args
     content = " ".join(content)
     notebook.add_note(Note(title, content))
@@ -22,7 +22,7 @@ def add_note(args, notebook):
 def find_note(args, notebook):
     """Search notes: find-note query"""
     if len(args) < 1:
-        raise ValueError("Give me search query please.")
+        raise InvalidArgumentsError("Give me search query please.")
     query = " ".join(args)
     results = [
         str(note)
@@ -40,9 +40,12 @@ def find_note(args, notebook):
 def delete_note(args, notebook):
     """Delete note: delete-note title"""
     if len(args) < 1:
-        raise ValueError("Give me title please.")
+        raise InvalidArgumentsError("Give me title please.")
     title = args[0]
-    return notebook.delete_note(title)
+    result = notebook.delete_note(title)
+    if result == "Note not found.":
+        raise NoteNotFoundError(result)
+    return result
 
 
 @note_command("edit-note")
@@ -50,10 +53,13 @@ def delete_note(args, notebook):
 def edit_note(args, notebook):
     """Edit note: edit-note title new_content"""
     if len(args) < 2:
-        raise ValueError("Give me title and new content please.")
+        raise InvalidArgumentsError("Give me title and new content please.")
     title, *content = args
     content = " ".join(content)
-    return notebook.edit_note(title, content)
+    result = notebook.edit_note(title, content)
+    if result == "Note not found.":
+        raise NoteNotFoundError(result)
+    return result
 
 
 @note_command("all-notes")
@@ -70,11 +76,11 @@ def all_notes(args, notebook):
 def add_tag(args, notebook):
     """Add tag to note: add-tag title tag"""
     if len(args) < 2:
-        raise ValueError("Give me title and tag please.")
+        raise InvalidArgumentsError("Give me title and tag please.")
     title, tag = args[0], args[1]
     note = notebook.find_note(title)
     if not note:
-        return "Note not found."
+        raise NoteNotFoundError("Note not found.")
     note.add_tag(tag)
     return "Tag added."
 
@@ -84,7 +90,7 @@ def add_tag(args, notebook):
 def find_by_tag(args, notebook):
     """Search notes by tag: find-by-tag tag"""
     if len(args) < 1:
-        raise ValueError("Give me tag please.")
+        raise InvalidArgumentsError("Give me tag please.")
     tag = args[0]
     results = notebook.find_by_tag(tag)
     if not results:

@@ -23,7 +23,7 @@ Requires [pipx](https://github.com/pypa/pipx). If not installed: `sudo apt insta
 **Option B — venv:**
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+source .venv/bin/activate   # Windows: .venv\Scripts\activate / if your pip is outdated run python -m pip install --upgrade pip
 pip install -e .
 ```
 Then run `assistant` only when venv is activated, or use `.venv/bin/assistant` from project root.
