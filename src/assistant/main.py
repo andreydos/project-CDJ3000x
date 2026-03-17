@@ -7,6 +7,28 @@ from .utils import parse_input
 import traceback
 
 
+RED = "\033[91m"
+GREEN = "\033[92m"
+RESET = "\033[0m"
+
+
+def colorize_message(message: str) -> str:
+    """Return message wrapped in color codes for specific actions."""
+    if message in ("Contact deleted.", "Note deleted."):
+        return f"{RED}{message}{RESET}"
+    if message in ("Contact added.", "Note added."):
+        return f"{GREEN}{message}{RESET}"
+    return message
+
+
+def print_response(message: str) -> None:
+    """Print a command response wrapped with separators."""
+    print(" | " + "-" * 10)
+    for line in str(colorize_message(message)).splitlines():
+        print(" | " + line)
+    print(" | " + "-" * 10)
+
+
 def main():
     """Run the assistant command loop."""
     book = load_data()
@@ -24,11 +46,13 @@ def main():
                     break
 
                 if command in NOTE_COMMANDS:
-                    print(NOTE_COMMANDS[command](args, notebook))
+                    result = NOTE_COMMANDS[command](args, notebook)
+                    print_response(result)
                 elif command in COMMANDS:
-                    print(COMMANDS[command](args, book))
+                    result = COMMANDS[command](args, book)
+                    print_response(result)
                 elif command:
-                    print("Invalid command.")
+                    print_response("Invalid command.")
             except Exception as e:
                 print("Unexpected error, please contact the developer.")
                 traceback.print_exception(type(e), e, e.__traceback__)
