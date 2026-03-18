@@ -84,7 +84,11 @@ class AddressBook(UserDict):
                     {
                         "name": name,
                         "congratulation_date": congratulation_date.strftime("%d.%m.%Y"),
+                        "_sort_key": congratulation_date,
                     }
                 )
 
+        result.sort(key=lambda x: x["_sort_key"])
+        for item in result:
+            del item["_sort_key"]
         return result

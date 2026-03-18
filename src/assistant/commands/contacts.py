@@ -18,12 +18,35 @@ def hello_command(args, book: AddressBook):
 @command("help")
 def help_command(args, book: AddressBook):
     """Show available commands."""
-    return """Commands:
-    Contacts: add, add-phone, add-email, add-address, add-birthday
-            change, phone, all, show-birthday, birthdays, search, delete
-    Notes:    add-note, find-note, edit-note, delete-note, all-notes
-            add-tag, find-by-tag
-    Other:    hello, help, exit/close"""
+    return """\
+Contacts:
+  add <name> [phone]          - Create a new contact (optionally with phone)
+  add-phone <name> <phone>    - Add phone to existing contact
+  add-email <name> <email>    - Set email for contact
+  add-address <name> <addr>   - Set address for contact
+  add-birthday <name> <date>  - Set birthday (DD.MM.YYYY)
+  change <name> <old> <new>   - Replace a phone number
+  phone <name>                - Show phones for contact
+  all                         - List all contacts
+  show-birthday <name>        - Show contact's birthday
+  birthdays [days]            - Upcoming birthdays (default: today)
+  search <query>              - Search contacts by name/phone/email
+  delete <name>               - Delete a contact
+
+Notes:
+  add-note <title> <content>  - Add a note with title and content
+  new-note                    - Add a note interactively (prompts)
+  find-note <query>           - Search notes by title or content
+  edit-note <title> <content> - Replace note content
+  delete-note <title>         - Delete a note
+  all-notes                   - List all notes
+  add-tag <title> <tag>       - Add a tag to a note
+  find-by-tag <tag>           - Find notes by tag
+
+Other:
+  hello                       - Greeting
+  help                        - Show this help
+  exit / close                - Save and quit"""
 
 
 @command("add")
